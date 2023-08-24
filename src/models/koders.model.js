@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const kodersSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true,
-    minLength: 2,
+    required: [true, "Nombre es requerido"],
+    minLength: [2, "Minimo 2 caractere"],
     maxLength: 50,
     trim: true,
   },

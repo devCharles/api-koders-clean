@@ -36,13 +36,17 @@ router.post("/", async (request, response) => {
 });
 
 router.get("/:id", async (request, response) => {
-  const id = request.params.id;
-  const koder = await koders.getById(id);
+  try {
+    const id = request.params.id;
+    const koder = await koders.getById(id);
 
-  response.json({
-    message: `Koder ${koder.firstName}`,
-    data: { koder },
-  });
+    response.json({
+      message: `Koder ${koder}`,
+      data: { koder },
+    });
+  } catch (error) {
+    response.status(500);
+  }
 });
 
 module.exports = router;
