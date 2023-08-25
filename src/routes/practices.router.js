@@ -1,16 +1,16 @@
 const express = require("express");
-const koders = require("../usecases/koders.usecase");
+const practices = require("../usecases/practices.usecase");
 
 const router = express.Router();
 
 router.get("/", async (request, response) => {
   try {
-    const allKoders = await koders.getAll();
+    const allPractices = await practices.getAll();
 
     response.json({
-      message: "Koders list",
+      message: "Practices list",
       data: {
-        koders: allKoders,
+        practices: allPractices,
       },
     });
   } catch (error) {
@@ -24,20 +24,19 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    const koderData = request.body;
-    const newKoder = await koders.create(koderData);
+    const practiceData = request.body;
+    const newKoder = await practices.create(practiceData);
 
     response.status(201);
     response.json({
       message: "Koder created",
       data: {
-        koder: newKoder,
+        practice: newKoder,
       },
     });
   } catch (error) {
     const status = error.name === "ValidationError" ? 400 : 500;
     response.status(status);
-    // const message = Object.entries(error.errors).map((key) => `${key}`);
     response.json({
       message: "something went wrong",
       error: error.message,
@@ -48,11 +47,11 @@ router.post("/", async (request, response) => {
 router.get("/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    const koder = await koders.getById(id);
+    const practice = await practices.getById(id);
 
     response.json({
-      message: `Koder ${koder.id}`,
-      data: { koder },
+      message: `Koder ${practice.id}`,
+      data: { practice },
     });
   } catch (error) {
     response.status(error.status || 500);
@@ -66,12 +65,12 @@ router.get("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const koderDeleted = await koders.deleteById(id);
+    const practiceDeleted = await practices.deleteById(id);
 
     response.json({
       message: "Koder deleted",
       data: {
-        koder: koderDeleted,
+        practice: practiceDeleted,
       },
     });
   } catch (error) {
@@ -88,17 +87,16 @@ router.patch("/:id", async (request, response) => {
     const { id } = request.params;
     const data = request.body;
 
-    const koderUpdated = await koders.updateById(id, data);
+    const practiceUpdated = await practices.updateById(id, data);
 
     response.json({
-      message: "koder updated",
+      message: "practice updated",
       data: {
-        koder: koderUpdated,
+        practice: practiceUpdated,
       },
     });
   } catch (error) {
-    const status = error.name === "ValidationError" ? 400 : 500;
-    response.status(error.status || status);
+    response.status(error.status || 500);
     response.json({
       message: "something went wrong",
       error: error.message,

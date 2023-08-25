@@ -55,6 +55,7 @@ async function updateById(id, dataToUpdate) {
 
   const koderUpdated = await Koder.findByIdAndUpdate(id, dataToUpdate, {
     new: true,
+    runValidators: true,
   });
 
   if (!koderUpdated) {
