@@ -32,6 +32,11 @@ const kodersSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  created: {
+    type: Date,
+    required: true,
+    default: new Date(),
+  },
 });
 
 module.exports = mongoose.model("koder", kodersSchema);

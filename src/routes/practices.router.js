@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get("/", async (request, response) => {
   try {
-    const allPractices = await practices.getAll();
+    const { titleFilter, koder } = request.query;
+    const allPractices = await practices.getAll(titleFilter, koder);
 
     response.json({
       message: "Practices list",
@@ -36,7 +37,7 @@ router.post("/", async (request, response) => {
     });
   } catch (error) {
     const status = error.name === "ValidationError" ? 400 : 500;
-    response.status(status);
+    response.status(error.status || status);
     response.json({
       message: "something went wrong",
       error: error.message,
