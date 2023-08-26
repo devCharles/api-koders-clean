@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Koder = require("../models/koders.model");
 const createError = require("http-errors");
+const bcrypt = require("../lib/bcrypt");
 
 // GET /koders
 async function getAll() {
@@ -10,10 +11,24 @@ async function getAll() {
 
 // POST /koders
 async function create(koderData) {
-  // Para validar usamos el mismo create
-  // Lanza un objeto de error con propiedades:
-  // name: 'ValidationError'
-  // message: 'el error' error legible
+  // falta validar si el koder existe
+  const existingKoder = await Koder.findOne({ email: koderData.email });
+
+  if (existingKoder) {
+    throw new createError(412, "email already registered");
+  }
+
+  const passwordRegex = new RegExp(
+    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-.+]).{8,}$"
+  );
+
+  if (!passwordRegex.test(koderData.password)) {
+    throw new createError(400, "Password too weak");
+  }
+
+  // guardar password encriptado
+  koderData.password = bcrypt.encrypt(koderData.password);
+
   const newKoder = await Koder.create(koderData);
   return newKoder;
 }
